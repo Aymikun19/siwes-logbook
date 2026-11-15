@@ -42,3 +42,7 @@ src/app/actions.ts            Server Actions (entries, settings, reviews)
 src/lib/weeks.ts              week grouping + numbering (unit tested)
 supabase/schema.sql           tables, trigger, RLS policies
 ```
+
+## Database schema
+
+All tables live in their own Postgres schema, `siwes`, rather than `public`, so this app can share one Supabase project with my other demo apps. After running `supabase/schema.sql`, add `siwes` under **Supabase → Project Settings → Data API → Exposed schemas**. The app selects it through `db: { schema }` in `src/lib/supabase/config.ts`.
