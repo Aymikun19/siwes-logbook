@@ -1,3 +1,5 @@
+<img src="public/logo.svg" alt="" width="64" height="64">
+
 # SIWES Logbook
 
 A digital logbook for the **Student Industrial Work Experience Scheme (SIWES)**. Students record what they do each day. Industry supervisors review and approve each week online. The finished logbook prints, or saves as a PDF, in a clean format for submission.

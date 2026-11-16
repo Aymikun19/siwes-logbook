@@ -1,3 +1,4 @@
+import { ArrowRight, Printer } from "lucide-react";
 import Link from "next/link";
 import { requireUser } from "@/lib/supabase/server";
 import { groupByWeek, toISODate } from "@/lib/weeks";
@@ -26,13 +27,13 @@ export default async function Dashboard() {
     <div className="grid gap-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Hi {me.full_name.split(" ")[0] || "there"} 👋</h1>
+          <h1 className="text-2xl font-semibold">Hi {me.full_name.split(" ")[0] || "there"}</h1>
           <p className="text-sm text-stone-500">
             {list.length} days logged · {totalHours} hours · {me.company ?? "Set your company in Settings"}
           </p>
         </div>
         <Link href="/print" className="btn-outline">
-          Print / save as PDF
+          <Printer size={16} aria-hidden /> Print / save as PDF
         </Link>
       </div>
       {!me.supervisor_email && (
@@ -86,7 +87,9 @@ async function SupervisorHome({ me }: { me: Profile }) {
                 {[s.matric_no, s.institution].filter(Boolean).join(" · ")}
               </p>
             </div>
-            <span className="text-sm text-accent">Review →</span>
+            <span className="inline-flex items-center gap-1 text-sm text-accent">
+              Review <ArrowRight size={14} aria-hidden />
+            </span>
           </Link>
         ))}
       </div>

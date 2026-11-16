@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { fmt, weekNumber, addDays } from "@/lib/weeks";
 import type { Entry, Review } from "@/lib/types";
 
@@ -18,7 +19,9 @@ export function WeekHeader({ week, first, review }: { week: string; first: strin
 export function ReviewBadge({ review }: { review?: Review }) {
   if (!review) return <span className="badge">Awaiting review</span>;
   return review.status === "approved" ? (
-    <span className="badge !bg-emerald-100 !text-emerald-800">✓ Approved</span>
+    <span className="badge inline-flex items-center gap-1 !bg-emerald-100 !text-emerald-800">
+      <Check size={12} aria-hidden /> Approved
+    </span>
   ) : (
     <span className="badge !bg-amber-100 !text-amber-800">Changes requested</span>
   );

@@ -18,8 +18,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <header className="border-b border-stone-200 bg-white print:hidden">
           <nav className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-            <Link href="/" className="font-semibold">
-              <span className="text-accent">▣</span> SIWES Logbook
+            <Link href="/" className="flex items-center gap-2 font-semibold">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="" width={24} height={24} className="h-6 w-6" />
+            SIWES Logbook
             </Link>
             {user && (
               <div className="flex items-center gap-4 text-sm">
