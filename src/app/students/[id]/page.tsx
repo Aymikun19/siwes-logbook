@@ -4,6 +4,11 @@ import { groupByWeek } from "@/lib/weeks";
 import type { Entry, Profile, Review } from "@/lib/types";
 import { EntryRow, WeekHeader } from "@/components";
 import { reviewWeek } from "../../actions";
+import { CalendarCheck, Clock, ShieldCheck } from "lucide-react";
+import { Stat } from "@/components/kit/Stat";
+import { BarChart } from "@/components/kit/Charts";
+import { todayISO, weeklyHours } from "@/lib/stats";
+import { fmt } from "@/lib/weeks";
 
 export default async function StudentPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -21,11 +26,21 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
   return (
     <div className="grid gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">{student.full_name}</h1>
+        <p className="eyebrow">Student</p>
+        <h1 className="page-title mt-1">{student.full_name}</h1>
         <p className="text-sm text-stone-500">
           {[student.matric_no, student.institution, student.company].filter(Boolean).join(" · ")}
         </p>
       </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Stat icon={CalendarCheck} label="Days logged" value={String(list.length)} />
+        <Stat icon={Clock} label="Total hours" value={String(list.reduce((n, e) => n + Number(e.hours), 0))} />
+        <Stat icon={ShieldCheck} label="Weeks approved" value={`${((reviews ?? []) as Review[]).filter((r) => r.status === "approved").length}/${groupByWeek(list).length}`} />
+      </div>
+      <section className="card p-6">
+        <h2 className="mb-5 font-semibold">Hours per week</h2>
+        <BarChart label="Hours per week" height={110} data={weeklyHours(list, todayISO()).map((w) => ({ label: fmt(w.week, { day: "numeric", month: "short" }), value: w.hours }))} />
+      </section>
       {groupByWeek(list).map(({ week, items }) => {
         const review = (reviews as Review[] | null)?.find((r) => r.week_start === week);
         return (

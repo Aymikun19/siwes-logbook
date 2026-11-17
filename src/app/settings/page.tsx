@@ -12,8 +12,11 @@ export default async function Settings() {
     </label>
   );
   return (
-    <form action={saveSettings} className="card grid max-w-xl gap-4 p-6">
-      <h1 className="text-xl font-semibold">Settings</h1>
+    <form action={saveSettings} className="card mx-auto grid w-full max-w-xl gap-4 p-6 sm:p-8">
+      <div>
+        <p className="eyebrow">Account</p>
+        <h1 className="page-title mt-1">Settings</h1>
+      </div>
       <label className="field">
         <span>I am a…</span>
         <select name="role" defaultValue={me?.role}>
@@ -26,7 +29,7 @@ export default async function Settings() {
       {f("institution", "Institution")}
       {f("company", "Placement company")}
       {f("supervisor_email", "Supervisor's email (students only)", "supervisor@company.com")}
-      <button className="btn justify-self-start">Save</button>
+      <button className="btn justify-self-start">Save settings</button>
     </form>
   );
 }
