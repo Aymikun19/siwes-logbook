@@ -1,3 +1,4 @@
+import { Avatar } from "@/components/kit/Avatar";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/supabase/server";
 import { groupByWeek } from "@/lib/weeks";
@@ -27,7 +28,7 @@ export default async function StudentPage({ params }: { params: Promise<{ id: st
     <div className="grid gap-6">
       <div>
         <p className="eyebrow">Student</p>
-        <h1 className="page-title mt-1">{student.full_name}</h1>
+        <h1 className="page-title mt-1 flex items-center gap-3"><Avatar userId={student.id} name={student.full_name} size={44} /> {student.full_name}</h1>
         <p className="text-sm text-stone-500">
           {[student.matric_no, student.institution, student.company].filter(Boolean).join(" · ")}
         </p>

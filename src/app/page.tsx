@@ -1,5 +1,6 @@
 import { ArrowRight, CalendarCheck, Clock, Download, Flame, Printer, Search, ShieldCheck, Users, X } from "lucide-react";
 import Link from "next/link";
+import { Avatar } from "@/components/kit/Avatar";
 import { getUser } from "@/lib/supabase/server";
 import { fmt, groupByWeek } from "@/lib/weeks";
 import { heatmap, streak, todayISO, topSkills, weeklyHours } from "@/lib/stats";
@@ -175,9 +176,7 @@ async function SupervisorHome({ me }: { me: Profile }) {
           return (
             <Link key={s.id} href={`/students/${s.id}`} className="card flex items-center justify-between gap-4 p-5 transition hover:-translate-y-0.5 hover:border-accent">
               <div className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-full bg-accent/10 text-sm font-semibold text-accent">
-                  {(s.full_name || s.email).slice(0, 2).toUpperCase()}
-                </span>
+                <Avatar userId={s.id} name={s.full_name || s.email} size={40} />
                 <div>
                   <p className="font-medium">{s.full_name || s.email}</p>
                   <p className="text-xs text-stone-500">{[s.matric_no, s.institution].filter(Boolean).join(" · ") || s.email}</p>
