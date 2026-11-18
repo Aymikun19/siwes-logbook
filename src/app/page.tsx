@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarCheck, Clock, Download, Flame, Printer, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, CalendarCheck, Clock, Download, Flame, Printer, Search, ShieldCheck, Users, X } from "lucide-react";
 import Link from "next/link";
 import { getUser } from "@/lib/supabase/server";
 import { fmt, groupByWeek } from "@/lib/weeks";
@@ -12,7 +12,8 @@ import { EntryForm } from "./EntryForm";
 import { EntryActions } from "./EntryActions";
 import { Heatmap } from "./Heatmap";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const q = ((await searchParams).q ?? "").trim().slice(0, 80);
   const { supabase, user } = await getUser();
   if (!user) return <Landing />;
   const { data: me } = await supabase.from("profiles").select("*").eq("id", user.id).single<Profile>();
@@ -33,6 +34,8 @@ export default async function Home() {
   const approved = reviewList.filter((r) => r.status === "approved").length;
   const weekly = weeklyHours(list, today);
   const skills = topSkills(list);
+  const shownWeeks = q ? filterWeeks(weeks, q) : weeks;
+  const matches = shownWeeks.reduce((n, w) => n + w.items.length, 0);
 
   return (
     <div className="grid gap-8">
@@ -94,9 +97,11 @@ export default async function Home() {
           <h2 id="skills" className="mb-4 font-semibold">Skills you&apos;ve picked up</h2>
           <ul className="flex flex-wrap gap-2">
             {skills.map((s) => (
-              <li key={s.label} className="badge !bg-accent/10 !px-3 !py-1 !text-sm !text-accent">
-                {s.label}
-                {s.n > 1 && <span className="text-xs opacity-70">×{s.n}</span>}
+              <li key={s.label}>
+                <Link href={`/?q=${encodeURIComponent(s.label)}#weeks`} className="badge !bg-accent/10 !px-3 !py-1 !text-sm !text-accent transition hover:!bg-accent/20" title={`Show days where you used ${s.label}`}>
+                  {s.label}
+                  {s.n > 1 && <span className="text-xs opacity-70">×{s.n}</span>}
+                </Link>
               </li>
             ))}
           </ul>
@@ -104,9 +109,23 @@ export default async function Home() {
       )}
 
       <section className="grid gap-4" aria-labelledby="weeks">
-        <h2 id="weeks" className="text-lg font-semibold">Your weeks</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="weeks" className="text-lg font-semibold">Your weeks</h2>
+          {list.length > 0 && (
+            <form role="search" action="/#weeks" className="relative">
+              <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" aria-hidden />
+              <input name="q" type="search" defaultValue={q} placeholder="Search activities and skills" aria-label="Search your entries" className="input !w-64 !py-2 pl-9" />
+            </form>
+          )}
+        </div>
+        {q && (
+          <p className="flex flex-wrap items-center gap-2 text-sm text-stone-600">
+            {matches} {matches === 1 ? "day matches" : "days match"} “{q}”
+            <Link href="/#weeks" className="btn-ghost !py-1 text-xs"><X size={13} aria-hidden /> Clear</Link>
+          </p>
+        )}
         {weeks.length === 0 && <EmptyState icon={CalendarCheck} title="No entries yet" text="Your logged days appear here, grouped into weeks for your supervisor to review." />}
-        {weeks.map(({ week, items }) => {
+        {shownWeeks.map(({ week, items }) => {
           const review = reviewFor(week);
           const locked = review?.status === "approved";
           return (
@@ -172,4 +191,14 @@ async function SupervisorHome({ me }: { me: Profile }) {
       </div>
     </div>
   );
+}
+
+/** Keep only the days whose activities or skills mention every word of the query. */
+function filterWeeks<T extends { items: Entry[] }>(weeks: T[], q: string): T[] {
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const hit = (e: Entry) => {
+    const text = `${e.activities} ${e.skills_learned ?? ""}`.toLowerCase();
+    return words.every((w) => text.includes(w));
+  };
+  return weeks.map((w) => ({ ...w, items: w.items.filter(hit) })).filter((w) => w.items.length > 0);
 }

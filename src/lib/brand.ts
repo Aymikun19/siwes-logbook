@@ -1,4 +1,4 @@
-import { ChartColumn, ClipboardCheck, FileDown, NotebookPen, PencilLine, Printer } from "lucide-react";
+import { ChartColumn, ClipboardCheck, FileDown, NotebookPen, Search, Printer } from "lucide-react";
 
 export const brand = {
   name: "SIWES Logbook",
@@ -13,7 +13,7 @@ export const brand = {
     { icon: NotebookPen, title: "Daily entries in seconds", text: "Record activities, hours and skills learned for each working day, grouped into weeks automatically." },
     { icon: ClipboardCheck, title: "Weekly supervisor review", text: "Your supervisor approves each week or requests changes, with comments you can see right away." },
     { icon: ChartColumn, title: "Progress dashboard", text: "Hours per week, an activity calendar, your logging streak and how many weeks are approved." },
-    { icon: PencilLine, title: "Edit without starting over", text: "Fix a typo or add a detail to any entry before your supervisor reviews the week." },
+    { icon: Search, title: "Search your logbook", text: "Find the day you set up that server or wrote that report. Tap any skill to see every day you used it." },
     { icon: Printer, title: "Print or save as PDF", text: "A clean, school-ready logbook layout you can print or attach to your SIWES report." },
     { icon: FileDown, title: "Export to CSV", text: "Download every entry as a spreadsheet for your own records or your report appendix." },
   ],
