@@ -30,5 +30,5 @@ export const brand = {
   ] as { href: string; label: string; public?: boolean }[],
   width: "max-w-5xl",
   repo: "https://github.com/Aymikun19/siwes-logbook",
-  preview: null as string | null,
+  preview: "/preview.webp" as string | null,
 };
